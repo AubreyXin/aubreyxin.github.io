@@ -1,0 +1,72 @@
+<!doctype html>
+<!-- <html xmlns="http://www.w3.org/1999/xhtml"> -->
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>让我帮你百度一下</title>
+    <meta name="description" content="输入一个问题，然后点击百度一下。| 本站与百度公司没有任何联系，baidu 以及本站出现的百度公司 Logo 是百度公司的商标。">
+    <meta http-equiv="content-language" content="zh-cn">
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="stylesheet" href="./css/style.css">
+    <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?2d52fdceceabfaa905d4af54f20fd656";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/base64.min.js"></script>
+    <script src="./js/clipboard.min.js"></script>
+    <script src="./js/script.js"></script>
+    <style type="text/css">
+        a {
+            text-decoration: none
+        }
+    </style>
+</head>
+
+<body>
+    <section id="search">
+        <div class="search-header">
+            <h2> <span class="let-me">让我帮你</span> <img src="./images/baidu_logo.png" alt="百度" title="让我帮你百度一下"> <span
+                    class="for-you">一下</span></h2>
+        </div>
+        <form id="search-form">
+            <div class="search-form-group">
+                <div class="search-form-input">
+                    <input type="search" id="kw" maxlength="255" autocomplete="off" required>
+                </div>
+                <button id="search-submit">百度一下</button>
+            </div>
+        </form>
+    </section>
+    <section id="function">
+        <h1 id="tips">输入一个问题，然后点击百度一下</h1>
+        <div id="output">
+            <textarea id="url-output" rows="3" readonly></textarea>
+            <div class="tool-btns">
+                <button data-clipboard-target="#url-output">复制</button>
+                <button id="preview">预览</button>
+            </div>
+        </div>
+    </section>
+    <footer id="footer">
+        <p class="copyright"> 本站与百度公司没有任何联系，baidu 以及本站出现的百度公司 Logo 是百度公司的商标 <br>
+            <script>
+                var mydate = new Date();
+                document.writeln("Copyright&nbsp;&copy;&nbsp;2021 - " + mydate.getFullYear() + '&nbsp;<a target="_blank" href="#">Aubrey</a><br />All&nbsp;Rights&nbsp;Reserved');
+            </script>
+        </p>
+    </footer>
+    <div id="arrow"></div>
+</body>
+
+</html>
