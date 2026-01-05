@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel数据处理工具</title>
+    <title>Excel末位排序</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>📊</text></svg>">
     <style>
         * {
@@ -295,7 +295,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Excel数据处理工具</h1>
+        <h1>Excel末位排序</h1>
         
         <div class="upload-section">
             <div class="upload-area" id="uploadArea">
@@ -304,11 +304,11 @@
                 <label for="fileInput">点击或拖拽Excel文件到此处上传</label>
             </div>
             <div class="file-list" id="fileList"></div>
-            <button class="process-btn" id="processBtn" disabled>开始处理</button>
+            <button class="process-btn" id="processBtn" disabled>开始排序</button>
         </div>
 
         <div class="result-section" id="resultSection" style="display: none;">
-            <h2>处理结果</h2>
+            <h2>排序结果</h2>
             <div id="resultContainer"></div>
         </div>
     </div>
@@ -346,7 +346,7 @@
                 handleFiles(e.dataTransfer.files);
             });
 
-            // 处理按钮点击事件
+            // 排序按钮点击事件
             processBtn.addEventListener('click', processFiles);
 
             // 让整个上传区域都可以点击
@@ -355,7 +355,7 @@
             });
         });
 
-        // 处理上传的文件
+        // 排序上传的文件
         function handleFiles(files) {
             const fileList = document.getElementById('fileList');
             const processBtn = document.getElementById('processBtn');
@@ -376,7 +376,7 @@
                 }
             }
 
-            // 启用处理按钮
+            // 启用排序按钮
             processBtn.disabled = uploadedFiles.length === 0;
         }
 
@@ -405,7 +405,7 @@
             }
         }
 
-        // 处理所有上传的文件
+        // 排序所有上传的文件
         function processFiles() {
             const resultSection = document.getElementById('resultSection');
             const resultContainer = document.getElementById('resultContainer');
@@ -420,7 +420,7 @@
             });
         }
 
-        // 处理单个文件
+        // 排序单个文件
         function processSingleFile(file, index) {
             const resultContainer = document.getElementById('resultContainer');
 
@@ -429,7 +429,7 @@
             resultItem.className = 'result-item';
             resultItem.innerHTML = `
                 <h3>文件: ${file.name}</h3>
-                <div class="status">正在处理...</div>
+                <div class="status">正在排序...</div>
             `;
             resultContainer.appendChild(resultItem);
 
@@ -441,35 +441,35 @@
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, { type: 'array' });
 
-                    // 处理每个工作表
+                    // 排序每个工作表
                     const processedWorkbook = processWorkbook(workbook);
 
-                    // 生成处理后的Excel文件
+                    // 生成排序后的Excel文件
                     const processedData = XLSX.write(processedWorkbook, { bookType: 'xlsx', type: 'array' });
                     const processedFile = new Blob([processedData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
                     // 创建下载链接
                     const downloadLink = document.createElement('a');
                     downloadLink.href = URL.createObjectURL(processedFile);
-                    // 在文件名后添加"已处理"
+                    // 在文件名后添加"已排序"
                     const fileNameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
                     const fileExt = file.name.substring(file.name.lastIndexOf('.'));
-                    downloadLink.download = `${fileNameWithoutExt}_已处理${fileExt}`;
-                    downloadLink.innerHTML = '<button class="download-btn">下载处理后的文件</button>';
+                    downloadLink.download = `${fileNameWithoutExt}_已排序${fileExt}`;
+                    downloadLink.innerHTML = '<button class="download-btn">下载排序后的文件</button>';
 
                     // 更新结果项
                     resultItem.innerHTML = `
                         <h3>文件: ${file.name}</h3>
-                        <div class="status success">处理完成</div>
+                        <div class="status success">排序完成</div>
                         ${downloadLink.outerHTML}
                     `;
                 } catch (error) {
-                    // 处理错误
+                    // 排序错误
                     resultItem.innerHTML = `
                         <h3>文件: ${file.name}</h3>
-                        <div class="status error">处理失败: ${error.message}</div>
+                        <div class="status error">排序失败: ${error.message}</div>
                     `;
-                    console.error('处理文件时出错:', error);
+                    console.error('排序文件时出错:', error);
                 }
             };
             reader.onerror = (error) => {
@@ -482,7 +482,7 @@
             reader.readAsArrayBuffer(file);
         }
 
-        // 处理整个工作簿
+        // 排序整个工作簿
         function processWorkbook(workbook) {
             const processedWorkbook = { ...workbook };
             processedWorkbook.Sheets = {};
@@ -497,12 +497,12 @@
             return processedWorkbook;
         }
 
-        // 处理单个工作表
+        // 排序单个工作表
         function processWorksheet(worksheet) {
             // 将工作表转换为JSON数组
             const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-            // 预处理数据
+            // 预排序数据
             const processedData = preprocessData(jsonData);
 
             // 去重
@@ -511,7 +511,7 @@
             // 排序
             const sortedData = sortData(uniqueData);
 
-            // 将处理后的数据转换回工作表
+            // 将排序后的数据转换回工作表
             const processedWorksheet = XLSX.utils.aoa_to_sheet(sortedData);
 
             // 设置所有单元格为文本格式
@@ -520,7 +520,7 @@
             return processedWorksheet;
         }
 
-        // 预处理数据
+        // 预排序数据
         function preprocessData(data) {
             const processedData = [];
 
@@ -531,7 +531,7 @@
                     return;
                 }
 
-                // 处理单个单元格内的多个数据条目
+                // 排序单个单元格内的多个数据条目
                 const processedRow = [];
                 row.forEach((cell) => {
                     if (cell && typeof cell === 'string' && cell.includes('\n')) {
