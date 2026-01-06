@@ -623,10 +623,10 @@
             // 复制原始数据以保持稳定排序
             const sortedData = [...data];
 
-            // 按第二列的末位数字排序
+            // 按第一列的末位数字排序
             sortedData.sort((a, b) => {
-                const lastDigitA = getSecondColumnLastDigit(a);
-                const lastDigitB = getSecondColumnLastDigit(b);
+                const lastDigitA = getFirstColumnLastDigit(a);
+                const lastDigitB = getFirstColumnLastDigit(b);
 
                 if (lastDigitA !== lastDigitB) {
                     return lastDigitA - lastDigitB;
@@ -639,11 +639,11 @@
             return sortedData;
         }
 
-        // 获取第二列的末位数字
-        function getSecondColumnLastDigit(row) {
-            // 检查是否有第二列
-            if (row.length >= 2) {
-                const cell = row[1]; // 第二列，索引从0开始
+        // 获取第一列的末位数字
+        function getFirstColumnLastDigit(row) {
+            // 检查是否有第一列
+            if (row.length >= 1) {
+                const cell = row[0]; // 第一列，索引从0开始
                 if (cell && typeof cell === 'string') {
                     // 提取末尾的数字
                     const match = cell.match(/\d+$/);
@@ -660,8 +660,8 @@
                 }
             }
 
-            // 如果没有找到数字，默认排序到最后
-            return 10;
+            // 如果没有找到数字，默认排序到最前面  
+            return -1;
         }
 
         // 设置所有单元格为文本格式
