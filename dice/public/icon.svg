@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- 骰子主体 -->
+  <rect x="4" y="4" width="24" height="24" rx="4" ry="4" fill="#e8e0ff" stroke="#9333ea" stroke-width="2"/>
+  <!-- 点数 - 6点布局 -->
+  <circle cx="10" cy="10" r="2.5" fill="#7c3aed"/>
+  <circle cx="22" cy="10" r="2.5" fill="#7c3aed"/>
+  <circle cx="10" cy="16" r="2.5" fill="#7c3aed"/>
+  <circle cx="22" cy="16" r="2.5" fill="#7c3aed"/>
+  <circle cx="10" cy="22" r="2.5" fill="#7c3aed"/>
+  <circle cx="22" cy="22" r="2.5" fill="#7c3aed"/>
+</svg>

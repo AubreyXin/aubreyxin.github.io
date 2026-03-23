@@ -1,0 +1,188 @@
+// 全局状态
+let currentMode = 'multiplier';
+let currentTimes = 0;
+const odds = 1.93;
+const betMultiplier = 2.2;
+
+// 设置模式
+function setMode(mode) {
+  currentMode = mode;
+  
+  // 更新按钮状态
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.dataset.mode === mode) {
+      btn.classList.add('active');
+    }
+  });
+  
+  calculate();
+}
+
+// 设置次数
+function setTimes(times) {
+  currentTimes = times;
+  
+  // 更新按钮状态
+  document.querySelectorAll('.times-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (parseInt(btn.dataset.times) === times) {
+      btn.classList.add('active');
+    }
+  });
+  
+  calculate();
+}
+
+// 格式化货币
+function formatCurrency(value) {
+  const num = parseFloat(value);
+  if (isNaN(num)) return '¥0.00';
+  return '¥' + num.toLocaleString('zh-CN', { 
+    minimumFractionDigits: 2, 
+    maximumFractionDigits: 2 
+  });
+}
+
+// 计算结果
+function calculate() {
+  const totalBalanceInput = document.getElementById('totalBalance');
+  const balanceNum = parseFloat(totalBalanceInput.value);
+  const container = document.getElementById('resultsContainer');
+  
+  // 验证输入
+  if (isNaN(balanceNum) || balanceNum <= 0) {
+    renderEmptyState('请输入余额以查看计算结果');
+    return;
+  }
+  
+  if (currentTimes === 0) {
+    renderEmptyState('请选择计划次数以查看计算结果');
+    return;
+  }
+  
+  // 计算比例总和
+  const ratios = [];
+  let ratioSum = 0;
+  for (let i = 0; i < currentTimes; i++) {
+    const ratio = Math.pow(betMultiplier, i);
+    ratios.push(ratio);
+    ratioSum += ratio;
+  }
+  
+  // 保本模式：预计算前n-1把的总投入
+  let firstRoundsTotal = 0;
+  if (currentMode === 'breakeven' && currentTimes > 1) {
+    firstRoundsTotal = balanceNum * (odds - 1) / odds;
+  }
+  
+  // 计算结果
+  const results = [];
+  let totalInvestment = 0;
+  
+  for (let i = 0; i < currentTimes; i++) {
+    let betAmount;
+    
+    if (currentMode === 'breakeven' && currentTimes > 1) {
+      if (i === currentTimes - 1) {
+        // 最后一把：投入 = 总余额 / 赔率
+        betAmount = Math.round(balanceNum / odds);
+      } else {
+        // 前几次：按比例分配
+        const firstRatiosSum = ratioSum - ratios[currentTimes - 1];
+        betAmount = Math.round(firstRoundsTotal * (ratios[i] / firstRatiosSum));
+      }
+    } else {
+      // 倍投模式：所有次数都按比例分配余额
+      betAmount = Math.round(balanceNum * (ratios[i] / ratioSum));
+    }
+    
+    totalInvestment += betAmount;
+    const winAmount = betAmount * odds;
+    const profit = winAmount - totalInvestment;
+    
+    results.push({
+      round: i + 1,
+      betAmount: betAmount.toFixed(2),
+      totalInvestment: totalInvestment.toFixed(2),
+      winAmount: winAmount.toFixed(2),
+      profit: profit.toFixed(2),
+      profitValue: profit
+    });
+  }
+  
+  // 渲染结果
+  renderResults(results);
+}
+
+// 渲染空状态
+function renderEmptyState(message) {
+  const container = document.getElementById('resultsContainer');
+  const modeText = currentMode === 'multiplier' ? '倍投模式' : '保本模式';
+  
+  container.innerHTML = `
+    <div class="empty-state">
+      <p class="empty-text">${message}</p>
+      <p class="empty-hint">当前模式：${modeText}</p>
+    </div>
+  `;
+}
+
+// 渲染结果
+function renderResults(results) {
+  const container = document.getElementById('resultsContainer');
+  const modeText = currentMode === 'multiplier' ? '倍投模式' : '保本模式';
+  const badgeClass = currentMode === 'multiplier' ? 'multiplier' : 'breakeven';
+  
+  let cardsHTML = results.map(result => {
+    const profitClass = result.profitValue >= 0 ? 'positive' : 'negative';
+    const profitSign = result.profitValue >= 0 ? '+' : '';
+    
+    return `
+      <div class="result-card">
+        <div class="card-header">
+          <div class="round-number">${result.round}</div>
+          <span class="round-label">第 ${result.round} 次</span>
+        </div>
+        <div class="card-content">
+          <div class="card-left">
+            <div class="data-item">
+              <span class="data-label">投入金额</span>
+              <span class="data-value">${formatCurrency(result.betAmount)}</span>
+            </div>
+            <div class="data-item">
+              <span class="data-label">累计投入</span>
+              <span class="data-value small">${formatCurrency(result.totalInvestment)}</span>
+            </div>
+          </div>
+          <div class="card-right">
+            <div class="data-item">
+              <span class="data-label">利润</span>
+              <span class="data-value profit ${profitClass}">${profitSign}${formatCurrency(result.profit)}</span>
+            </div>
+            <div class="data-item">
+              <span class="data-label">中奖金额</span>
+              <span class="data-value win-amount">${formatCurrency(result.winAmount)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  container.innerHTML = `
+    <div class="results-header">
+      <h2 class="results-title">计算结果</h2>
+      <span class="mode-badge ${badgeClass}">${modeText}</span>
+    </div>
+    <div class="results-grid cols-${currentTimes}">
+      ${cardsHTML}
+    </div>
+  `;
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+  // 初始显示空状态
+  renderEmptyState('请输入余额以查看计算结果');
+});
