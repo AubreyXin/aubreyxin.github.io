@@ -492,13 +492,39 @@ body {
   }
 
   .card-content {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
   }
 
   .card-right {
-    padding-left: 0;
-    border-left: none;
-    padding-top: 1rem;
-    border-top: 1px solid #e9d5ff;
+    padding-left: 0.75rem;
+    border-left: 1px solid #e9d5ff;
+  }
+
+  .card-left,
+  .card-right {
+    gap: 0.75rem;
+  }
+
+  .data-value {
+    font-size: 16px;
+  }
+
+  .data-value.win-amount {
+    font-size: 18px;
+  }
+
+  .data-value.small {
+    font-size: 14px;
+  }
+
+  .result-card {
+    padding: 1rem;
+  }
+
+  .round-number {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
   }
 }
