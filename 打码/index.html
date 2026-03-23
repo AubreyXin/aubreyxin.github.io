@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="目前倍数2.2倍" />
+  <title>打码计算器</title>
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  <link rel="stylesheet" href="/styles/main.css" />
+</head>
+<body>
+  <div class="min-h-screen">
+    <div class="max-w-4xl mx-auto">
+      <!-- 标题 -->
+      <div class="text-center mb-8">
+        <!-- 3D立体旋转骰子 -->
+        <div class="mt-4 mb-8 flex justify-center">
+          <div class="relative dice-container">
+            <!-- 光晕效果 -->
+            <div class="glow-effect"></div>
+            
+            <!-- 3D骰子容器 -->
+            <div class="dice-3d" id="dice">
+              <!-- 6个面 -->
+              <div class="dice-face face-1" data-face="1">
+                <div class="dot" style="left: 50%; top: 50%;"></div>
+              </div>
+              <div class="dice-face face-6" data-face="6">
+                <div class="dot" style="left: 25%; top: 25%;"></div>
+                <div class="dot" style="left: 75%; top: 25%;"></div>
+                <div class="dot" style="left: 25%; top: 50%;"></div>
+                <div class="dot" style="left: 75%; top: 50%;"></div>
+                <div class="dot" style="left: 25%; top: 75%;"></div>
+                <div class="dot" style="left: 75%; top: 75%;"></div>
+              </div>
+              <div class="dice-face face-3" data-face="3">
+                <div class="dot" style="left: 25%; top: 25%;"></div>
+                <div class="dot" style="left: 50%; top: 50%;"></div>
+                <div class="dot" style="left: 75%; top: 75%;"></div>
+              </div>
+              <div class="dice-face face-4" data-face="4">
+                <div class="dot" style="left: 25%; top: 25%;"></div>
+                <div class="dot" style="left: 75%; top: 25%;"></div>
+                <div class="dot" style="left: 25%; top: 75%;"></div>
+                <div class="dot" style="left: 75%; top: 75%;"></div>
+              </div>
+              <div class="dice-face face-2" data-face="2">
+                <div class="dot" style="left: 25%; top: 25%;"></div>
+                <div class="dot" style="left: 75%; top: 75%;"></div>
+              </div>
+              <div class="dice-face face-5" data-face="5">
+                <div class="dot" style="left: 25%; top: 25%;"></div>
+                <div class="dot" style="left: 75%; top: 25%;"></div>
+                <div class="dot" style="left: 50%; top: 50%;"></div>
+                <div class="dot" style="left: 25%; top: 75%;"></div>
+                <div class="dot" style="left: 75%; top: 75%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <h1 class="main-title">打码计算器</h1>
+        <p class="sub-title">目前倍数2.2倍</p>
+      </div>
+
+      <!-- 主卡片 -->
+      <div class="main-card">
+        <!-- 模式选择 -->
+        <div class="form-group">
+          <label class="form-label">计算模式</label>
+          <div class="mode-grid">
+            <button class="mode-btn active" data-mode="multiplier" onclick="setMode('multiplier')">
+              <div class="mode-title">倍投模式</div>
+              <div class="mode-desc">按2.2倍投，全程盈利</div>
+            </button>
+            <button class="mode-btn" data-mode="breakeven" onclick="setMode('breakeven')">
+              <div class="mode-title">保本模式</div>
+              <div class="mode-desc">最后一把保本不亏</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- 余额输入 -->
+        <div class="form-group">
+          <label class="form-label">余额</label>
+          <input
+            type="number"
+            id="totalBalance"
+            placeholder="请输入余额"
+            class="input-field"
+            step="0.01"
+            oninput="calculate()"
+          />
+        </div>
+
+        <!-- 计划次数选择 -->
+        <div class="form-group">
+          <label class="form-label form-label-fuchsia">计划次数</label>
+          <div class="times-grid">
+            <button class="times-btn" data-times="3" onclick="setTimes(3)">3次</button>
+            <button class="times-btn" data-times="4" onclick="setTimes(4)">4次</button>
+            <button class="times-btn" data-times="5" onclick="setTimes(5)">5次</button>
+            <button class="times-btn" data-times="6" onclick="setTimes(6)">6次</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 结果展示区域 -->
+      <div id="resultsContainer" class="results-container"></div>
+    </div>
+  </div>
+
+  <script src="/scripts/app.js"></script>
+</body>
+</html>
