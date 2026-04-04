@@ -41,7 +41,7 @@ function formatCurrency(value) {
   });
 }
 
-// 结果
+// 计算结果
 function calculate() {
   const totalBalanceInput = document.getElementById('totalBalance');
   const balanceNum = parseFloat(totalBalanceInput.value);
@@ -63,7 +63,7 @@ function calculate() {
     return;
   }
   
-  // 比例总和
+  // 计算比例总和
   const ratios = [];
   let ratioSum = 0;
   for (let i = 0; i < currentTimes; i++) {
@@ -72,7 +72,7 @@ function calculate() {
     ratioSum += ratio;
   }
   
-  // 结果
+  // 计算结果
   const results = [];
   let totalInvestment = 0;
   
