@@ -1,17 +1,15 @@
 // 全局状态
-let currentMode = 'multiplier';
 let currentTimes = 0;
+let betMultiplier = 0;
 const odds = 1.93;
-const betMultiplier = 2.2;
 
-// 设置模式
-function setMode(mode) {
-  currentMode = mode;
+// 设置倍数
+function setMultiplier(multiplier) {
+  betMultiplier = multiplier;
   
-  // 更新按钮状态
-  document.querySelectorAll('.mode-btn').forEach(btn => {
+  document.querySelectorAll('[data-multiplier]').forEach(btn => {
     btn.classList.remove('active');
-    if (btn.dataset.mode === mode) {
+    if (parseFloat(btn.dataset.multiplier) === multiplier) {
       btn.classList.add('active');
     }
   });
@@ -23,8 +21,7 @@ function setMode(mode) {
 function setTimes(times) {
   currentTimes = times;
   
-  // 更新按钮状态
-  document.querySelectorAll('.times-btn').forEach(btn => {
+  document.querySelectorAll('[data-times]').forEach(btn => {
     btn.classList.remove('active');
     if (parseInt(btn.dataset.times) === times) {
       btn.classList.add('active');
@@ -44,7 +41,7 @@ function formatCurrency(value) {
   });
 }
 
-// 计算结果
+// 结果
 function calculate() {
   const totalBalanceInput = document.getElementById('totalBalance');
   const balanceNum = parseFloat(totalBalanceInput.value);
@@ -52,16 +49,21 @@ function calculate() {
   
   // 验证输入
   if (isNaN(balanceNum) || balanceNum <= 0) {
-    renderEmptyState('请输入余额以查看计算结果');
+    renderEmptyState('请输入余额以查看结果');
+    return;
+  }
+  
+  if (betMultiplier === 0) {
+    renderEmptyState('请选择倍数以查看结果');
     return;
   }
   
   if (currentTimes === 0) {
-    renderEmptyState('请选择计划次数以查看计算结果');
+    renderEmptyState('请选择次数以查看结果');
     return;
   }
   
-  // 计算比例总和
+  // 比例总和
   const ratios = [];
   let ratioSum = 0;
   for (let i = 0; i < currentTimes; i++) {
@@ -70,32 +72,13 @@ function calculate() {
     ratioSum += ratio;
   }
   
-  // 保本模式：预计算前n-1把的总投入
-  let firstRoundsTotal = 0;
-  if (currentMode === 'breakeven' && currentTimes > 1) {
-    firstRoundsTotal = balanceNum * (odds - 1) / odds;
-  }
-  
-  // 计算结果
+  // 结果
   const results = [];
   let totalInvestment = 0;
   
   for (let i = 0; i < currentTimes; i++) {
-    let betAmount;
-    
-    if (currentMode === 'breakeven' && currentTimes > 1) {
-      if (i === currentTimes - 1) {
-        // 最后一把：投入 = 总余额 / 赔率
-        betAmount = Math.round(balanceNum / odds);
-      } else {
-        // 前几次：按比例分配
-        const firstRatiosSum = ratioSum - ratios[currentTimes - 1];
-        betAmount = Math.round(firstRoundsTotal * (ratios[i] / firstRatiosSum));
-      }
-    } else {
-      // 倍投模式：所有次数都按比例分配余额
-      betAmount = Math.round(balanceNum * (ratios[i] / ratioSum));
-    }
+    // 倍投模式：所有次数都按比例分配余额
+    const betAmount = Math.round(balanceNum * (ratios[i] / ratioSum));
     
     totalInvestment += betAmount;
     const winAmount = betAmount * odds;
@@ -118,12 +101,10 @@ function calculate() {
 // 渲染空状态
 function renderEmptyState(message) {
   const container = document.getElementById('resultsContainer');
-  const modeText = currentMode === 'multiplier' ? '倍投模式' : '保本模式';
   
   container.innerHTML = `
     <div class="empty-state">
       <p class="empty-text">${message}</p>
-      <p class="empty-hint">当前模式：${modeText}</p>
     </div>
   `;
 }
@@ -131,8 +112,6 @@ function renderEmptyState(message) {
 // 渲染结果
 function renderResults(results) {
   const container = document.getElementById('resultsContainer');
-  const modeText = currentMode === 'multiplier' ? '倍投模式' : '保本模式';
-  const badgeClass = currentMode === 'multiplier' ? 'multiplier' : 'breakeven';
   
   let cardsHTML = results.map(result => {
     const profitClass = result.profitValue >= 0 ? 'positive' : 'negative';
@@ -173,7 +152,6 @@ function renderResults(results) {
   container.innerHTML = `
     <div class="results-header">
       <h2 class="results-title">计算结果</h2>
-      <span class="mode-badge ${badgeClass}">${modeText}</span>
     </div>
     <div class="results-grid cols-${currentTimes}">
       ${cardsHTML}
@@ -184,5 +162,5 @@ function renderResults(results) {
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', function() {
   // 初始显示空状态
-  renderEmptyState('请输入余额以查看计算结果');
+  renderEmptyState('请输入余额以查看结果');
 });
