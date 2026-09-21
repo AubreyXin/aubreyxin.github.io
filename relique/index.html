@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,7 +35,7 @@
             font-size: 2.8rem;
             font-weight: 700;
             margin-bottom: 12px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
         }
 
         header p {
@@ -66,13 +67,13 @@
             border-radius: 12px;
             font-size: 1rem;
             outline: none;
-            background: rgba(255,255,255,0.95);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transition: box-shadow 0.3s;
         }
 
         .search-box input:focus {
-            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
         }
 
         .search-box::before {
@@ -94,7 +95,7 @@
             padding: 10px 20px;
             border: none;
             border-radius: 20px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
             font-size: 0.9rem;
             cursor: pointer;
@@ -103,7 +104,7 @@
         }
 
         .filter-btn:hover {
-            background: rgba(255,255,255,0.35);
+            background: rgba(255, 255, 255, 0.35);
         }
 
         .filter-btn.active {
@@ -122,7 +123,7 @@
             background: white;
             border-radius: 20px;
             padding: 28px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
             transition: transform 0.3s, box-shadow 0.3s;
             display: flex;
             flex-direction: column;
@@ -130,7 +131,7 @@
 
         .app-card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
         }
 
         .app-header {
@@ -149,7 +150,7 @@
             justify-content: center;
             font-size: 2rem;
             flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .app-info {
@@ -220,7 +221,7 @@
 
         .download-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102,126,234,0.4);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
         .download-btn:active {
@@ -250,7 +251,7 @@
 
         .official-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(96,165,250,0.3);
+            box-shadow: 0 6px 20px rgba(96, 165, 250, 0.3);
         }
 
         .official-btn:active {
@@ -260,7 +261,7 @@
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: rgba(255,255,255,0.9);
+            color: rgba(255, 255, 255, 0.9);
             grid-column: 1 / -1;
         }
 
@@ -276,7 +277,7 @@
         footer {
             text-align: center;
             margin-top: 60px;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
             font-size: 0.9rem;
         }
 
@@ -295,11 +296,12 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1>Relique 卡牌常用应用</h1>
-            <p>安全下载主流加密货币交易与钱包应用，开启你的卡牌之旅</p>
+            <p>安全下载主流交易所与钱包，开启你的卡牌之旅</p>
         </header>
 
         <div class="controls">
@@ -317,6 +319,18 @@
 
     <script>
         const apps = [
+            {
+                name: "TokenPocket",
+                developer: "TokenPocket",
+                description: "多链去中心化数字钱包，支持以太坊、BSC等主流公链资产管理。",
+                icon: "🔵",
+                iconImage: "./icons/TokenPocket.jpg",
+                color: "#2E86DE",
+                category: "wallet",
+                platforms: ["Android"],
+                downloadUrl: "https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/TokenPocket-pro.apk",
+                officialUrl: "https://www.tokenpocket.pro/zh/download/app"
+            },
             {
                 name: "币安",
                 developer: "Binance",
@@ -353,18 +367,7 @@
                 downloadUrl: "https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/Gate_App.apk",
                 officialUrl: "https://www.gate.com/zh/appdownload"
             },
-            {
-                name: "TokenPocket",
-                developer: "TokenPocket",
-                description: "多链去中心化数字钱包，支持以太坊、BSC等主流公链资产管理。",
-                icon: "🔵",
-                iconImage: "./icons/TokenPocket.jpg",
-                color: "#2E86DE",
-                category: "wallet",
-                platforms: ["Android"],
-                downloadUrl: "https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/TokenPocket-pro.apk",
-                officialUrl: "https://www.tokenpocket.pro/zh/download/app"
-            },
+
             {
                 name: "Coinbase",
                 developer: "Coinbase",
@@ -387,7 +390,7 @@
         function renderApps() {
             const filteredApps = apps.filter(app => {
                 const matchesSearch = app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                     app.developer.toLowerCase().includes(searchQuery.toLowerCase());
+                    app.developer.toLowerCase().includes(searchQuery.toLowerCase());
                 return matchesSearch;
             });
 
@@ -405,9 +408,9 @@
                 <div class="app-card">
                     <div class="app-header">
                         <div class="app-icon" style="background: ${app.color}">
-                            ${app.iconImage 
-                                ? `<img src="${app.iconImage}" alt="${app.name}" style="width:100%;height:100%;border-radius:16px;object-fit:cover;">`
-                                : app.icon}
+                            ${app.iconImage
+                    ? `<img src="${app.iconImage}" alt="${app.name}" style="width:100%;height:100%;border-radius:16px;object-fit:cover;">`
+                    : app.icon}
                         </div>
                         <div class="app-info">
                             <div class="app-name">${app.name}</div>
@@ -435,4 +438,5 @@
         renderApps();
     </script>
 </body>
+
 </html>
