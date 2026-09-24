@@ -1,470 +1,535 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relique 卡牌常用应用</title>
-    <link rel="icon" href="./icons/Relique.jpg"  type="image/jpeg">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 50px;
-            color: white;
-        }
-
-        .site-logo {
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
-            object-fit: cover;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        header h1 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .browser-tip {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: -20px;
-            margin-bottom: 30px;
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 30px;
-            justify-content: center;
-        }
-
-        .search-box {
-            flex: 1;
-            min-width: 250px;
-            max-width: 400px;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 14px 18px 14px 48px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            outline: none;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s;
-        }
-
-        .search-box input:focus {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
-        }
-
-        .search-box::before {
-            content: "🔍";
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.1rem;
-        }
-
-        .category-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .filter-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-        }
-
-        .filter-btn:hover {
-            background: rgba(255, 255, 255, 0.35);
-        }
-
-        .filter-btn.active {
-            background: white;
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-        }
-
-        .app-card {
-            background: white;
-            border-radius: 20px;
-            padding: 28px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .app-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
-        }
-
-        .app-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 18px;
-            gap: 16px;
-        }
-
-        .app-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 20px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .app-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .app-name {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 4px;
-        }
-
-        .app-developer {
-            font-size: 0.85rem;
-            color: #888;
-        }
-
-        .app-description {
-            font-size: 0.92rem;
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 18px;
-            flex: 1;
-        }
-
-        .app-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 18px;
-        }
-
-        .tag {
-            padding: 4px 12px;
-            background: #f0f2ff;
-            color: #667eea;
-            border-radius: 12px;
-            font-size: 0.78rem;
-            font-weight: 500;
-        }
-
-        .platform {
-            padding: 4px 10px;
-            background: #e8f5e9;
-            color: #2e7d32;
-            border-radius: 8px;
-            font-size: 0.78rem;
-            font-weight: 500;
-        }
-
-        .download-btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            text-align: center;
-        }
-
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .download-btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        .official-btn {
-            display: block;
-            flex: 1;
-            padding: 14px;
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            color: #60a5fa;
-            border: 2px solid #60a5fa;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            text-align: center;
-        }
-
-        .official-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(96, 165, 250, 0.3);
-        }
-
-        .official-btn:active {
-            transform: translateY(0);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: rgba(255, 255, 255, 0.9);
-            grid-column: 1 / -1;
-        }
-
-        .empty-state .icon {
-            font-size: 4rem;
-            margin-bottom: 16px;
-        }
-
-        .empty-state p {
-            font-size: 1.1rem;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 60px;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 600px) {
-            header h1 {
-                font-size: 2rem;
-            }
-
-            .app-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .container {
-                padding: 24px 16px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relique</title>
+<meta name="description" content="币安、欧易、Gate、TokenPocket、Coinbase 应用下载中心">
+<link rel="icon" href="./icons/Relique.jpg" type="image/jpeg">
+<link rel="preconnect" href="https://miaoda.feishu.cn">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap">
+<style>
+:root{
+  --bg:#F5F7FA;
+  --surface:#FFFFFF;
+  --surface-2:#F7F9FC;
+  --border:#E2E8F0;
+  --border-bright:#CBD5E1;
+  --text:#111827;
+  --text-2:#64748B;
+  --gold:#F0B90B;
+  --radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.65;
+  min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
+}
+/* 背景细网格，仅顶部区域可见 */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(to right, rgba(15,23,42,.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15,23,42,.045) 1px, transparent 1px);
+  background-size:46px 46px;
+  -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,.9), transparent 55%);
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,.9), transparent 55%);
+  pointer-events:none;
+  z-index:0;
+}
+.wrap{
+  position:relative;
+  z-index:1;
+  max-width:1120px;
+  margin:0 auto;
+  padding:56px 24px 48px;
+}
+/* ===== Hero ===== */
+.hero{
+  text-align:center;
+  margin-bottom:44px;
+}
+.hero .kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:.14em;
+  color:var(--gold);
+  border:1px solid rgba(240,185,11,.32);
+  background:rgba(240,185,11,.08);
+  padding:6px 14px;
+  border-radius:999px;
+  margin-bottom:20px;
+}
+.hero h1{
+  font-size:clamp(30px,5vw,44px);
+  font-weight:900;
+  letter-spacing:-.01em;
+  line-height:1.2;
+}
+.hero h1 em{
+  font-style:normal;
+  color:var(--gold);
+}
+.hero p{
+  margin-top:14px;
+  color:var(--text-2);
+  font-size:16px;
+}
+.site-logo{
+  width:84px;
+  height:84px;
+  border-radius:24px;
+  object-fit:cover;
+  margin-bottom:18px;
+  border:2px solid rgba(240,185,11,.55);
+  box-shadow:0 8px 24px rgba(15,23,42,.12);
+}
+.browser-tip{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  max-width:560px;
+  margin:-16px auto 30px;
+  padding:10px 18px;
+  border:1px solid rgba(240,185,11,.4);
+  background:rgba(240,185,11,.08);
+  color:#8A6D00;
+  font-size:13px;
+  border-radius:999px;
+}
+.search-box{
+  position:relative;
+  max-width:420px;
+  margin:0 auto 26px;
+}
+.search-box svg{
+  position:absolute;
+  left:14px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--text-2);
+  pointer-events:none;
+}
+.search-box input{
+  width:100%;
+  padding:12px 16px 12px 42px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  font-size:14.5px;
+  font-family:inherit;
+  outline:none;
+  transition:border-color .2s ease;
+}
+.search-box input:focus{border-color:var(--gold)}
+.search-box input::placeholder{color:var(--text-2)}
+.card-name .dev{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:5px;
+  font-size:12.5px;
+  color:var(--text-2);
+}
+.card-name .dev .tag{margin-top:0}
+/* 金色光晕 */
+.hero::before{
+  content:"";
+  position:absolute;
+  top:-160px;
+  left:50%;
+  transform:translateX(-50%);
+  width:560px;
+  height:320px;
+  background:radial-gradient(ellipse at center, rgba(240,185,11,.10), transparent 65%);
+  pointer-events:none;
+}
+/* ===== 安全提示条 ===== */
+.notice{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  max-width:860px;
+  margin:0 auto 40px;
+  padding:14px 18px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:var(--surface-2);
+  color:var(--text-2);
+  font-size:13.5px;
+  line-height:1.7;
+}
+.notice svg{
+  flex:none;
+  margin-top:3px;
+  color:var(--gold);
+}
+.notice strong{color:var(--text);font-weight:600}
+/* ===== 卡片网格 ===== */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px 22px 20px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  position:relative;
+  transition:border-color .25s ease, transform .25s ease, background .25s ease;
+}
+.card:hover{
+  border-color:#1E88E5;
+  transform:translateY(-3px);
+}
+.card-top{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.logo-chip{
+  flex:none;
+  width:72px;
+  height:72px;
+  border-radius:18px;
+  overflow:hidden;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.08);
+  box-shadow:0 2px 10px rgba(15,23,42,.08);
+}
+.logo-chip img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.card-name h2{
+  font-size:19px;
+  font-weight:900;
+  letter-spacing:-.01em;
+  line-height:1.25;
+}
+.card-name .tag{
+  display:inline-block;
+  margin-top:5px;
+  font-size:12px;
+  font-weight:500;
+  color:var(--text-2);
+  border:1px solid var(--border);
+  padding:2px 9px;
+  border-radius:999px;
+  letter-spacing:.03em;
+}
+.card-desc{
+  font-size:13.5px;
+  color:var(--text-2);
+  line-height:1.7;
+  flex:1;
+}
+.card-actions{
+  display:flex;
+  gap:10px;
+  margin-top:4px;
+}
+.btn-dl{
+  flex:1;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:11px 14px;
+  border-radius:12px;
+  border:1px solid transparent;
+  font-size:14.5px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  text-decoration:none;
+  color:#fff;
+  background:#1E88E5;
+  transition:filter .2s ease, transform .15s ease;
+}
+.btn-dl:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-dl:active{transform:translateY(0)}
+.btn-dl svg{flex:none}
+.btn-copy{
+  flex:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:11px 14px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text-2);
+  font-size:13px;
+  font-weight:500;
+  font-family:inherit;
+  cursor:pointer;
+  transition:color .2s ease, border-color .2s ease, background .2s ease;
+}
+.btn-copy:hover{
+  color:var(--text);
+  border-color:var(--border-bright);
+  background:rgba(15,23,42,.04);
+}
+.btn-copy svg{flex:none}
+a:focus-visible,button:focus-visible{
+  outline:2px solid var(--gold);
+  outline-offset:2px;
+}
+/* ===== 页脚 ===== */
+.footer{
+  margin-top:44px;
+  padding-top:22px;
+  border-top:1px solid var(--border);
+  text-align:center;
+  color:var(--text-2);
+  font-size:12.5px;
+  line-height:1.8;
+}
+/* ===== Toast ===== */
+#toast{
+  position:fixed;
+  left:50%;
+  bottom:34px;
+  transform:translateX(-50%) translateY(20px);
+  background:#1B2740;
+  color:#E9EDF5;
+  border:1px solid #2A3A5C;
+  padding:10px 20px;
+  border-radius:12px;
+  font-size:14px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  z-index:99;
+  box-shadow:0 8px 30px rgba(0,0,0,.4);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important;animation:none!important}
+}
+/* ===== 响应式 ===== */
+@media (max-width:900px){
+  .grid{grid-template-columns:1fr;gap:16px}
+  .wrap{padding:40px 18px 36px}
+  .card{padding:22px 20px 20px}
+  .card-desc{font-size:14px}
+  .btn-dl{font-size:14.5px;padding:12px 14px}
+  .btn-copy{padding:12px 13px}
+  .notice{font-size:14px;padding:13px 15px}
+  .search-box input{font-size:16px}
+  .browser-tip{font-size:14px}
+  .hero::before{width:380px;height:220px;top:-120px}
+}
+</style>
 </head>
-
 <body>
-    <div class="container">
-        <header>
-            <img src="./icons/Relique.jpg" alt="Relique Logo" class="site-logo">
-            <h1>Relique 卡牌常用应用</h1>
-            <p>安全下载主流交易所与钱包<br>开启你的卡牌之旅</p>
-        </header>
+<div class="wrap">
 
-        <div class="browser-tip">请通过浏览器访问该页面</div>
+  <header class="hero">
+    <img class="site-logo" src="./icons/Relique.jpg" alt="Relique logo" loading="lazy">
+    <h1>Relique <em>卡牌常用应用</em></h1>
+    <p>安全下载主流交易所与钱包<br>开启你的卡牌之旅</p>
+  </header>
 
-        <div class="controls">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="搜索应用名称...">
-            </div>
+  <div class="browser-tip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>
+    请通过浏览器访问该页面
+  </div>
+
+  <div class="search-box">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>
+    <input type="search" id="searchInput" placeholder="搜索应用名称..." aria-label="搜索应用">
+  </div>
+
+  <main class="grid">
+
+    <!-- ===== TokenPocket ===== -->
+    <section class="card" style="--card-accent:#1677FF" data-search="tokenpocket 钱包 数字钱包">
+      <div class="card-top">
+        <div class="logo-chip"><img src="./icons/TokenPocket.jpg" alt="TokenPocket logo" loading="lazy"></div>
+        <div class="card-name">
+          <h2>TokenPocket</h2>
+          <div class="dev"><span>TokenPocket</span></div>
         </div>
+      </div>
+      <p class="card-desc">多链去中心化数字钱包，支持以太坊、BSC 等主流公链资产管理。</p>
+      <div class="card-actions">
+        <a class="btn-dl" href="https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/TokenPocket-pro.apk" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/></svg>
+          下载 APK
+        </a>
+        <button class="btn-copy" type="button" data-link="https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/TokenPocket-pro.apk">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+          复制链接
+        </button>
+      </div>
+    </section>
 
-        <div class="app-grid" id="appGrid"></div>
+    <!-- ===== 币安 Binance ===== -->
+    <section class="card" style="--card-accent:#F0B90B" data-search="币安 binance 交易所">
+      <div class="card-top">
+        <div class="logo-chip"><img src="./icons/BNApp64.jpg" alt="币安 Binance logo" loading="lazy"></div>
+        <div class="card-name">
+          <h2>币安</h2>
+          <div class="dev"><span>Binance</span></div>
+        </div>
+      </div>
+      <p class="card-desc">全球领先的加密货币交易平台，支持现货、合约、杠杆等多种交易方式。</p>
+      <div class="card-actions">
+        <a class="btn-dl" href="https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/BNApp64.apk" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/></svg>
+          下载 APK
+        </a>
+        <button class="btn-copy" type="button" data-link="https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/BNApp64.apk">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+          复制链接
+        </button>
+      </div>
+    </section>
 
-        <footer>
-            <p>&copy; Relique 卡牌常用应用下载 开启你的卡牌之旅</p>
-        </footer>
-    </div>
+    <!-- ===== 欧易 OKX ===== -->
+    <section class="card" style="--card-accent:#F5F7FA" data-search="欧易 okx 交易所">
+      <div class="card-top">
+        <div class="logo-chip"><img src="./icons/OKX_App.jpg" alt="欧易 OKX logo" loading="lazy"></div>
+        <div class="card-name">
+          <h2>欧易</h2>
+          <div class="dev"><span>OKX</span></div>
+        </div>
+      </div>
+      <p class="card-desc">全球知名的数字资产交易平台，提供现货、合约、期权等全方位交易服务。</p>
+      <div class="card-actions">
+        <a class="btn-dl" href="https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/OKX_App.apk" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/></svg>
+          下载 APK
+        </a>
+        <button class="btn-copy" type="button" data-link="https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/OKX_App.apk">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+          复制链接
+        </button>
+      </div>
+    </section>
 
-    <script>
-        const apps = [
-            {
-                name: "TokenPocket",
-                developer: "TokenPocket",
-                description: "多链去中心化数字钱包，支持以太坊、BSC等主流公链资产管理。",
-                icon: "🔵",
-                iconImage: "./icons/TokenPocket.jpg",
-                color: "#2E86DE",
-                category: "wallet",
-                platforms: ["Android"],
-                downloadUrl: "https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/TokenPocket-pro.apk",
-                officialUrl: "https://www.tokenpocket.pro/zh/download/app"
-            },
-            {
-                name: "币安",
-                developer: "Binance",
-                description: "全球领先的加密货币交易平台，支持现货、合约、杠杆等多种交易方式。",
-                icon: "🟡",
-                iconImage: "./icons/BNApp64.jpg",
-                color: "#F3BA2F",
-                category: "exchange",
-                platforms: ["Android"],
-                downloadUrl: "https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/BNApp64.apk",
-                officialUrl: "https://www.binance.com/zh-CN/download"
-            },
-            {
-                name: "欧易",
-                developer: "OKX",
-                description: "全球知名的数字资产交易平台，提供现货、合约、期权等全方位交易服务。",
-                icon: "🔷",
-                iconImage: "./icons/OKX_App.jpg",
-                color: "#1D1D1D",
-                category: "exchange",
-                platforms: ["Android"],
-                downloadUrl: "https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/OKX_App.apk",
-                officialUrl: "https://www.okx.com/zh-hans/download"
-            },
-            {
-                name: "Gate",
-                developer: "Gate.io",
-                description: "老牌加密货币交易平台，支持丰富的交易对和理财产品。",
-                icon: "🟢",
-                iconImage: "./icons/Gate_App.jpg",
-                color: "#17E6A1",
-                category: "exchange",
-                platforms: ["Android"],
-                downloadUrl: "https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/Gate_App.apk",
-                officialUrl: "https://www.gate.com/zh/appdownload"
-            },
+    <!-- ===== Gate ===== -->
+    <section class="card" style="--card-accent:#1E88E5" data-search="gate gate.io 交易所">
+      <div class="card-top">
+        <div class="logo-chip"><img src="./icons/Gate_App.jpg" alt="Gate.io logo" loading="lazy"></div>
+        <div class="card-name">
+          <h2>Gate</h2>
+          <div class="dev"><span>Gate.io</span></div>
+        </div>
+      </div>
+      <p class="card-desc">老牌加密货币交易平台，支持丰富的交易对和理财产品。</p>
+      <div class="card-actions">
+        <a class="btn-dl" href="https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/Gate_App.apk" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/></svg>
+          下载 APK
+        </a>
+        <button class="btn-copy" type="button" data-link="https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/Gate_App.apk">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+          复制链接
+        </button>
+      </div>
+    </section>
 
-            {
-                name: "Coinbase",
-                developer: "Coinbase",
-                description: "一站式交易加密货币、股票、衍生品、预测市场以及更多产品",
-                icon: "🔵",
-                iconImage: "./icons/Coinbase_App.jpg",
-                color: "#2E86DE",
-                category: "wallet",
-                platforms: ["Android"],
-                downloadUrl: "https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/Coinbase_App.apk",
-                officialUrl: "https://www.coinbase.com/zh-cn"
-            }
-        ];
+    <!-- ===== Coinbase ===== -->
+    <section class="card" style="--card-accent:#0052FF" data-search="coinbase 交易所">
+      <div class="card-top">
+        <div class="logo-chip"><img src="./icons/Coinbase_App.jpg" alt="Coinbase logo" loading="lazy"></div>
+        <div class="card-name">
+          <h2>Coinbase</h2>
+          <div class="dev"><span>Coinbase</span></div>
+        </div>
+      </div>
+      <p class="card-desc">一站式交易加密货币、股票、衍生品、预测市场以及更多产品。</p>
+      <div class="card-actions">
+        <a class="btn-dl" href="https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/Coinbase_App.apk" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/></svg>
+          下载 APK
+        </a>
+        <button class="btn-copy" type="button" data-link="https://aubrey-xin.oss-cn-hongkong.aliyuncs.com/relique/apk/Coinbase_App.apk">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+          复制链接
+        </button>
+      </div>
+    </section>
 
-        const appGrid = document.getElementById('appGrid');
-        const searchInput = document.getElementById('searchInput');
+  </main>
 
-        let searchQuery = '';
+  <footer class="footer">
+    <div>© Relique 卡牌常用应用 · 开启你的卡牌之旅</div>
+  </footer>
+</div>
 
-        function renderApps() {
-            const filteredApps = apps.filter(app => {
-                const matchesSearch = app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    app.developer.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchesSearch;
-            });
+<div id="toast" role="status"></div>
 
-            if (filteredApps.length === 0) {
-                appGrid.innerHTML = `
-                    <div class="empty-state">
-                        <div class="icon">📭</div>
-                        <p>没有找到匹配的应用</p>
-                    </div>
-                `;
-                return;
-            }
-
-            appGrid.innerHTML = filteredApps.map(app => `
-                <div class="app-card">
-                    <div class="app-header">
-                        <div class="app-icon" style="background: ${app.color}">
-                            ${app.iconImage
-                    ? `<img src="${app.iconImage}" alt="${app.name}" style="width:100%;height:100%;border-radius:16px;object-fit:cover;">`
-                    : app.icon}
-                        </div>
-                        <div class="app-info">
-                            <div class="app-name">${app.name}</div>
-                            <div class="app-developer">${app.developer}</div>
-                        </div>
-                    </div>
-                    <p class="app-description">${app.description}</p>
-                    <div class="btn-group">
-                        <a href="${app.downloadUrl}" target="_blank" class="download-btn">
-                            立即下载
-                        </a>
-                        <a href="${app.officialUrl}" target="_blank" class="download-btn">
-                            官方下载
-                        </a>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        searchInput.addEventListener('input', (e) => {
-            searchQuery = e.target.value;
-            renderApps();
-        });
-
-        renderApps();
-    </script>
+<script>
+(function(){
+  var toast = document.getElementById('toast');
+  var timer = null;
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(timer);
+    timer = setTimeout(function(){ toast.classList.remove('show'); }, 1800);
+  }
+  function copyText(text){
+    if (navigator.clipboard && window.isSecureContext){
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function(resolve, reject){
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try{
+        document.execCommand('copy') ? resolve() : reject(new Error('copy failed'));
+      }catch(e){ reject(e); }
+      document.body.removeChild(ta);
+    });
+  }
+  var searchInput = document.getElementById('searchInput');
+  if (searchInput){
+    searchInput.addEventListener('input', function(){
+      var q = this.value.trim().toLowerCase();
+      document.querySelectorAll('.card').forEach(function(card){
+        var key = (card.getAttribute('data-search') || '').toLowerCase();
+        card.style.display = key.indexOf(q) !== -1 ? '' : 'none';
+      });
+    });
+  }
+  document.querySelectorAll('.btn-copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var link = btn.getAttribute('data-link');
+      if (!link) return;
+      copyText(link).then(function(){ showToast('下载链接已复制'); })
+        .catch(function(){ showToast('复制失败，请长按链接手动复制'); });
+    });
+  });
+})();
+</script>
 </body>
-
 </html>
+<!-- （注：内容由AI生成） -->
