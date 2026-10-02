@@ -104,7 +104,7 @@ body::before{
   box-shadow:0 8px 24px rgba(15,23,42,.12);
 }
 .browser-tip{
-  display:flex;
+  display:none;
   align-items:center;
   justify-content:center;
   gap:8px;
@@ -493,13 +493,19 @@ a:focus-visible,button:focus-visible{
 
 <script>
 (function(){
+  if(/MicroMessenger|QQ/i.test(navigator.userAgent)){
+    var tip=document.querySelector('.browser-tip');
+    if(tip) tip.style.display='flex';
+  }
   var toast = document.getElementById('toast');
   var timer = null;
   function showToast(msg){
     toast.textContent = msg;
     toast.classList.add('show');
     clearTimeout(timer);
-    timer = setTimeout(function(){ toast.classList.remove('show'); }, 1800);
+    timer = setTimeout(function(){
+      toast.classList.remove('show');
+    }, 1800);
   }
   function copyText(text){
     if (navigator.clipboard && window.isSecureContext){
@@ -532,12 +538,15 @@ a:focus-visible,button:focus-visible{
     btn.addEventListener('click', function(){
       var link = btn.getAttribute('data-link');
       if (!link) return;
-      copyText(link).then(function(){ showToast('下载链接已复制'); })
-        .catch(function(){ showToast('复制失败，请长按链接手动复制'); });
+      copyText(link).then(function(){
+        showToast('下载链接已复制');
+      })
+        .catch(function(){
+          showToast('复制失败，请长按链接手动复制');
+        });
     });
   });
 })();
 </script>
 </body>
 </html>
-<!-- （注：内容由AI生成） -->
